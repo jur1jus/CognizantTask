@@ -1,0 +1,11 @@
+C:\Users\Admin\Desktop\GognizantTask\Dal\bin\Debug\netcoreapp2.2\Dal.deps.json
+C:\Users\Admin\Desktop\GognizantTask\Dal\bin\Debug\netcoreapp2.2\Dal.dll
+C:\Users\Admin\Desktop\GognizantTask\Dal\bin\Debug\netcoreapp2.2\Dal.pdb
+C:\Users\Admin\Desktop\GognizantTask\Dal\obj\Debug\netcoreapp2.2\Dal.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\GognizantTask\Dal\obj\Debug\netcoreapp2.2\Dal.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\GognizantTask\Dal\obj\Debug\netcoreapp2.2\Dal.AssemblyInfo.cs
+C:\Users\Admin\Desktop\GognizantTask\Dal\obj\Debug\netcoreapp2.2\Dal.dll
+C:\Users\Admin\Desktop\GognizantTask\Dal\obj\Debug\netcoreapp2.2\Dal.pdb
+C:\Users\Admin\Desktop\GognizantTask\Dal\obj\Debug\netcoreapp2.2\Dal.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\GognizantTask\Dal\bin\Debug\netcoreapp2.2\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Admin\Desktop\GognizantTask\Dal\bin\Debug\netcoreapp2.2\Microsoft.EntityFrameworkCore.Relational.xml
