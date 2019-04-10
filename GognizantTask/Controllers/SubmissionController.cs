@@ -63,7 +63,7 @@ namespace GognizantTask.Controllers
 				};
 				return PartialView("SubmissionCompile", viewModelResult);
 			}
-			var result = await _submissionService.JDoodleResult(runSubmission.Code);
+			var result = await _submissionService.GetJDoodleResult(runSubmission.Code);
 
 			if (result.output.Contains("Compilation failed")) {
 				var viewModelResult = new ViewModels.CompilationResult {
@@ -71,17 +71,46 @@ namespace GognizantTask.Controllers
 					CompilationFailMessage = result.output,
 					TestCases = null
 				};
+
+				var userSubmission = new ViewModels.SubmissionViewModel {
+					Nickname = runSubmission.Nickname,
+					Submission = runSubmission.Code,
+					Task = runSubmission.TaskId.Value,
+					IsSuccess = false
+				};
+
+				await _submissionService.SaveUserSubmission(userSubmission);
+
 				return PartialView("SubmissionCompile", viewModelResult);
+			} else {
+				var viewModel = new ViewModels.CompilationResult {
+					IsCopileSuccessful = true,
+					UserSubmissionResult = result.output.Trim()
+				};
+
+				viewModel.TestCases = await _submissionService.GetTestCases(runSubmission.TaskId.Value, result.output.Trim());
+
+				var userSubmission = new ViewModels.SubmissionViewModel {
+					Nickname = runSubmission.Nickname,
+					Submission = runSubmission.Code,
+					Task = runSubmission.TaskId.Value,
+					IsSuccess = !viewModel.TestCases.Any(x => x.IsTestPassed == false)
+				};
+
+				await _submissionService.SaveUserSubmission(userSubmission);
+
+				return PartialView("SubmissionCompile", viewModel);
 			}
+			
+		}
 
-			var viewModel = new ViewModels.CompilationResult {
-				IsCopileSuccessful = true,
-				UserSubmissionResult = result.output.Trim()
-			};
 
-			viewModel.TestCases = await _submissionService.GetTestCases(runSubmission.TaskId.Value, result.output.Trim());
-
-			return PartialView("SubmissionCompile", viewModel);
+		[HttpGet]
+		[Route("topusers")]
+		public async Task<IActionResult> TopUsers()
+		{
+			var result = await _submissionService.GetTopUsers();
+			return await Task.FromResult(View("TopUsers", result));
 		}
 		
     }

@@ -17,15 +17,13 @@
 		</div>
 	}
 
-
-
 	foreach (var testCase in Model.TestCases) {
 		var color = Model.UserSubmissionResult == testCase.ExpectedResult ? "test-passed" : "test-failed";
-
+		var icon = Model.UserSubmissionResult == testCase.ExpectedResult ? Html.Raw("<i class=\"fas fa-check-circle\"></i>") : Html.Raw("<i class=\"fas fa-times-circle\"></i>");
 		<div class="card result-card">
 
 			<div class="card-header">
-				<span class="@color">Sample Test Case @testCase.Index <i class="fas fa-check-circle"></i></span>
+				<span class="@color">Sample Test Case @testCase.Index  @icon</span>
 			</div>
 			<div class="card-body">
 				<p class="label">Input</p>

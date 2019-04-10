@@ -18,6 +18,8 @@ namespace Dal
 
 		public DbSet<TestCase> TestCases { get; set; }
 
+		public DbSet<UserSubmission> UsersSubmissions { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			var tasksCfg = modelBuilder.Entity<Task>();
@@ -31,6 +33,11 @@ namespace Dal
 			testCasesCfg.HasKey(m => m.Id);
 			testCasesCfg.Property(m => m.Id).HasColumnName("Id").ValueGeneratedOnAdd();
 			testCasesCfg.Property(m => m.TaskId).HasColumnName("TaskId");
+
+			var usersSubmissionsCfg = modelBuilder.Entity<UserSubmission>();
+			usersSubmissionsCfg.ToTable("UserSubmissions");
+			usersSubmissionsCfg.HasKey(m => m.Id);
+			usersSubmissionsCfg.Property(m => m.Id).HasColumnName("Id").ValueGeneratedOnAdd();
 		}
 	}
 }

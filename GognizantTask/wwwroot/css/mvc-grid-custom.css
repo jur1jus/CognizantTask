@@ -1,0 +1,25 @@
+﻿.table-th {
+	padding: 9px !important;
+}
+
+.action-buttons {
+	width: 130px;
+}
+
+.no-visible {
+	display: none;
+}
+
+.email,
+.name,
+.password {
+	width: 100px;
+}
+
+.date-of-birth{
+	width: 130px;
+}
+
+.additional-info {
+	width: 180px;
+}

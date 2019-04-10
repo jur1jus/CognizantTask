@@ -11,14 +11,20 @@ using Newtonsoft.Json;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Services.Utils;
+using Models = Dal.Models;
 
 namespace Services
 {
 	public interface ISubmissionService : IBaseService
 	{
-		Task<JDoodleResult> JDoodleResult(string script);
+		Task<JDoodleResult> GetJDoodleResult(string script);
 
 		Task<List<ViewModels.TestCase>> GetTestCases(int taskId, string userSubmissionResult);
+
+		Task SaveUserSubmission(ViewModels.SubmissionViewModel submission);
+
+		Task<List<ViewModels.TopUsersViewModel>> GetTopUsers();
 	}
 
 	public class SubmissionService : BaseService, ISubmissionService
@@ -31,7 +37,7 @@ namespace Services
 			_configuration = configuration;
 		}
 
-		public async Task<JDoodleResult> JDoodleResult(string script)
+		public async Task<JDoodleResult> GetJDoodleResult(string script)
 		{
 			var jDoodleUrl = _configuration.GetValue<string>("AppSettings:jdoodleApiUrl");
 			var jDoodleClientId = _configuration.GetValue<string>("AppSettings:jdoodleClientId");
@@ -76,7 +82,40 @@ namespace Services
 					Input = intpuContent.Trim()
 				});
 			}
-			return testCasesResult;
+			return RunTests(testCasesResult, userSubmissionResult);
+		}
+
+		public async Task SaveUserSubmission(ViewModels.SubmissionViewModel submission)
+		{
+			var submitionFilename = Path.Combine("UserSubmissions", GenerateFilename(submission.Nickname, submission.Task));
+
+			File.WriteAllLines(Path.Combine(_basePath, submitionFilename), submission.Submission.Split("\n"));
+
+			var userSubmission = new Models.UserSubmission {
+				IsSuccess = submission.IsSuccess,
+				Nickname = submission.Nickname,
+				UserSubmissionFilePath = submitionFilename,
+				TaskId = submission.Task
+			};
+
+			_dbContext.UsersSubmissions.Add(userSubmission);
+			await _dbContext.SaveChangesAsync();
+			
+		}
+
+		public async Task<List<ViewModels.TopUsersViewModel>> GetTopUsers()
+		{
+			var topUsersList = await (from submissions in _dbContext.UsersSubmissions
+										group submissions by submissions.Nickname into g
+										let countOfSuccessfullSubmissions = g.Count(m => m.IsSuccess == true)
+										orderby countOfSuccessfullSubmissions descending
+										select new ViewModels.TopUsersViewModel {
+											Nickname = g.Key,
+											CountOfSuccessfullSubmissions = countOfSuccessfullSubmissions
+										}).ToListAsync();
+			topUsersList = topUsersList.Take(5).ToList();
+			
+			return topUsersList;
 		}
 
 		private List<ViewModels.TestCase> RunTests(List<ViewModels.TestCase> testCases, string userSubmissionResult)
@@ -89,5 +128,11 @@ namespace Services
 
 			return testCases;
 		}
+
+		private string GenerateFilename(string nickname, int taskId)
+		{
+			return $"{DateTime.Now.LongDateTime()}_{nickname}_{taskId}.txt";
+		}
+
 	}
 }

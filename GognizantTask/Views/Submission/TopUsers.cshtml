@@ -1,0 +1,21 @@
+﻿@using System.Collections.Generic;
+@model List<TopUsersViewModel>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">Nickname</th>
+			<th scope="col">Successful submissions</th>
+			<th scope="col">Solved tasks</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model) {
+			<tr>
+				<td>@item.Nickname</td>
+				<td>@item.CountOfSuccessfullSubmissions</td>
+				<td>@item.SovedTasks</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -35,12 +35,14 @@ namespace GognizantTask
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddRazorPagesOptions(options => {
+				options.Conventions.AddPageRoute("/submission", "");
+			});
 			services.AddDbContext<CognizantDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CognizantDbContext")));
 
-			services.AddScoped<IBaseService, BaseService>();
-			services.AddScoped<ISubmissionService, SubmissionService>();
-			services.AddScoped<ITaskService, TaskService>();
+			services.AddTransient<IBaseService, BaseService>();
+			services.AddTransient<ISubmissionService, SubmissionService>();
+			services.AddTransient<ITaskService, TaskService>();
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,7 +67,7 @@ namespace GognizantTask
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Submission}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

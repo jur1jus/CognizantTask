@@ -1,0 +1,17 @@
+using System;
+
+class MinArrayValue
+{
+    public static int MinValue(int[] array) {
+        //Write your code here
+    }
+    public static void Main()
+    {
+        int[] array = new int[] {
+            6, 8, 3, 15, 22, 1
+        };
+        
+        int minValue = MinValue(array);
+        Console.WriteLine(minValue);
+    }
+}

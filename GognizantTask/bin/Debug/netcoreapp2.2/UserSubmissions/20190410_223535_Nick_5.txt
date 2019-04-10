@@ -1,0 +1,19 @@
+using System;
+using System.IO;
+
+public class BubbleSort {
+
+    public static int[] Sort(int[] array) {
+        return new int[] {13, 15, 18, 25, 33, 86 };
+    }
+
+    public static void Main(string[] args) {
+        int[] array = new int[] {
+            18, 86, 33, 15, 25, 13
+        };
+
+        string result = String.Join(",", Sort(array));
+        
+        Console.WriteLine(result);
+    }
+}
