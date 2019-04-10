@@ -39,6 +39,7 @@ namespace GognizantTask
 			services.AddDbContext<CognizantDataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CognizantDbContext")));
 
 			services.AddScoped<IBaseService, BaseService>();
+			services.AddScoped<ISubmissionService, SubmissionService>();
 			services.AddScoped<ITaskService, TaskService>();
 		}
 
@@ -64,7 +65,7 @@ namespace GognizantTask
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Submission}/{action=Index}/{id?}");
             });
         }
     }

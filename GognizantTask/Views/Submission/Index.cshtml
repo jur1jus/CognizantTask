@@ -1,0 +1,81 @@
+﻿@model SubmissionViewModel
+
+
+@{ 
+	var tasks = ViewData["Tasks"] as List<Dal.ViewModels.Task>;
+}
+
+<div class="errors col-sm-5">
+	<ul class="error-list"></ul>
+</div>
+
+<div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Nickname, new { @class = "col-sm-3 control-label" })
+		@Html.TextBoxFor(m => m.Nickname, new { @class = "form-control col-sm-5 nick-name" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Task, new { @class = "col-sm-3 control-label" })
+		@Html.DropDownListFor(m => m.Task, new SelectList(tasks, "Id", "Name"), "", new { @class = "form-control col-sm-5 task-type" })
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Submission, new { @class = "col-sm-3 control-label" })
+		@Html.TextAreaFor(m => m.Submission, new { @class = "submission form-control col-sm-9", rows = "15" })
+	</div>
+	<div class="form-group col-sm-9">
+		<button type="button" class="btn btn-sm btn-primary float-right submit-code">Submit Code</button>
+		<button type="button" class="btn btn-sm btn-success float-right run-code">Run Code</button>
+
+	</div>
+
+	<div class="compilation-result-wrapper col-sm-9">
+		
+	</div>
+	<input type="hidden" id="getTaskTempateUrl" value="@Url.Action("GetTaskTemplate", "Submission", new { taskId = 0 })" />
+	<input type="hidden" id="runCodeUrl" value="@Url.Action("RunCode", "Submission")" />
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$(".task-type").on("change", function () {
+				var value = $(this).val();
+
+				var url = $("#getTaskTempateUrl").val().replace("0", value);
+
+				var jqxhr = $.get(url, function (data) {
+					$(".submission").val("");
+					$(".submission").val(data.taskTemplate);
+				})
+					.fail(function (data) {
+						$(".submission").val("");
+					})
+			});
+
+
+			$(".run-code").on("click", function () {
+				$(".compilation-result-wrapper").html("");
+				$(".error-list").html("");
+				var url = $("#runCodeUrl").val();
+
+				var data = {
+					Code: $(".submission").val(),
+					TaskId: $(".task-type").val(),
+					Nickname: $(".nick-name").val()
+				}
+
+				$.post(url, data, function (html) {
+					$(".compilation-result-wrapper").html(html);
+				}).
+					fail(function (data) {
+						console.log();
+						$.each(data.responseJSON.errors, function (index, value) {
+							console.log(value);
+							$(".error-list").append('<li class="error-label">' + value + '</li>');
+						})
+
+					})
+			});
+		});
+	</script>
+}

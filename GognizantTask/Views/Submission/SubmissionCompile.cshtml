@@ -1,0 +1,63 @@
+﻿@model CompilationResult
+
+@if (Model != null && Model.IsCopileSuccessful) {
+
+	var failedTestCases = Model.TestCases.Where(m => m.IsTestPassed == false).Count();
+	var totalTestCases = Model.TestCases.Count();
+
+	if (totalTestCases == failedTestCases) {
+		<div class="compilation-result-fail-wrapper">
+			<p class="compilation-status fail">Wrong Answer :(</p>
+			<p>@failedTestCases / @totalTestCases test case failed</p>
+		</div>
+	} else {
+		<div class="compilation-result-success-wrapper">
+			<p class="compilation-status success">Congratulations !</p>
+			<p>You have passed the sample test cases. Click the submit button to run your code against all the test cases.</p>
+		</div>
+	}
+
+
+
+	foreach (var testCase in Model.TestCases) {
+		var color = Model.UserSubmissionResult == testCase.ExpectedResult ? "test-passed" : "test-failed";
+
+		<div class="card result-card">
+
+			<div class="card-header">
+				<span class="@color">Sample Test Case @testCase.Index <i class="fas fa-check-circle"></i></span>
+			</div>
+			<div class="card-body">
+				<p class="label">Input</p>
+				<div class="compile-message">
+					@testCase.Input
+				</div>
+				<p class="label">Your output</p>
+				<div class="compile-message">
+					@Model.UserSubmissionResult
+				</div>
+				<p class="label">Expected output</p>
+				<div class="compile-message">
+					@testCase.ExpectedResult
+				</div>
+			</div>
+		</div>
+	}
+
+
+} else {
+	<div class="compilation-result-fail-wrapper">
+		<p class="compilation-status fail">Compilation fail :(</p>
+		<p>Check the compiler output, fix the error and try again.</p>
+	</div>
+
+	<div class="card fail-card">
+		<div class="card-body">
+			<p>Compile Message</p>
+			<div class="compile-message">
+				@Model.CompilationFailMessage
+			</div>
+		</div>
+	</div>
+
+}

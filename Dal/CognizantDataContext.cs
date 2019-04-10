@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Dal.ViewModels;
+using Dal.Models;
 
 namespace Dal
 {
@@ -16,15 +16,21 @@ namespace Dal
 
 		public DbSet<Task> Tasks { get; set; }
 
+		public DbSet<TestCase> TestCases { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			var tasksCfg = modelBuilder.Entity<Task>();
 			tasksCfg.ToTable("Tasks");
 			tasksCfg.HasKey(m => m.Id);
 			tasksCfg.Property(m => m.Id).HasColumnName("Id").ValueGeneratedOnAdd();
-			tasksCfg.Property(m => m.Name).HasColumnName("Name").HasMaxLength(100);
 
-			
+
+			var testCasesCfg = modelBuilder.Entity<TestCase>();
+			testCasesCfg.ToTable("TestCases");
+			testCasesCfg.HasKey(m => m.Id);
+			testCasesCfg.Property(m => m.Id).HasColumnName("Id").ValueGeneratedOnAdd();
+			testCasesCfg.Property(m => m.TaskId).HasColumnName("TaskId");
 		}
 	}
 }
