@@ -87,7 +87,7 @@ namespace Services
 
 		public async Task SaveUserSubmission(ViewModels.SubmissionViewModel submission)
 		{
-			var submitionFilename = Path.Combine("UserSubmissions", GenerateFilename(submission.Nickname, submission.Task));
+			var submitionFilename = Path.Combine("..\\..\\..\\UserSubmissions", GenerateFilename(submission.Nickname, submission.Task));
 
 			File.WriteAllLines(Path.Combine(_basePath, submitionFilename), submission.Submission.Split("\n"));
 
